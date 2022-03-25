@@ -120,7 +120,7 @@ function PolyscanApi() {
    * @returns {Promise<null|*>}
    */
   const fetchLogs = async (docHash, topicIndex) => {
-    const API_KEY = "EAUGQKD7E5HHQR5PQZMCQBD6VTJBSTEHQ5"
+    const API_KEY = atob('RUFVR1FLRDdFNUhIUVI1UFFaTUNRQkQ2VlRKQlNURUhRNQ==')
     const registeredTopic = "0x10906fae603eebfac53ddc0f103bee8a044dd7643c425c7a90f921dfa15ef62c"
     const registeredNewVersionTopic = "0xb5dac8ad49578955a20b2a5179573fe2be183efb3659e0daded600bd59b3975e"
     const topic0 = topicIndex === 1 ? registeredTopic : registeredNewVersionTopic
