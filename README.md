@@ -1,5 +1,4 @@
-# Site
-https://ipbee.github.io/blockchain
+# Site: [ipbee.github.io/blockchain](https://ipbee.github.io/blockchain)
 
 # Height Level Solution Description
 
@@ -7,9 +6,9 @@ We are using Smart Contract responsible for registering document hashes in Ether
 
 Smart Contract has read and write methods. Write methods put and update data in blockchain. You can imagine it like global data base with free read access and paid write capability. Write commission depends on blockchain and amount of writing data. [Polygon blockchain](https://polygon.technology) for now one of the cheapest Ethereum compatible blockchain.
 
-To write Polygon blockchain we need to have account in Polygon network and [MATIC](https://polygon.technology/matic-token) coins to pay commissions.
+To write Polygon blockchain we need to have account in Polygon network and [MATIC](https://polygon.technology/matic-token) coins to pay commission fees.
 
-The one of the simplest way to create account using [Metamask wallet](https://metamask.io) available as [Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and Firefox extension.
+The one of the simplest way to create account is to use [Metamask wallet](https://metamask.io) available as [Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and Firefox extension.
 
 ### Document hash
 
@@ -32,7 +31,7 @@ You can use [Polygonscan][3] to try these methods.
 Emits `Registered` and `NewVersionRegistered` events.
 * `registerNewVersionMultiply` -- implement `registerNewVersion` logic for each of pair of input data 
 
-Only creator of contract can use write methods. You can use [Polygonscan][2] to use these methods. You need to click `Connect to Web3` link to connect Metamask browser 
+Only creator of contract can use write methods. You can use [Polygonscan][2] to try these methods. You need to click `Connect to Web3` link to connect Metamask browser 
 extension, and you need to have `MATIC` tokens for commission fee. Usual commission about `0.0014 MATIC` ~ `$0.003` by current price.
 
 ### Events (Logs)
@@ -71,6 +70,32 @@ You can find fetching logic implementation in [js/app.js](https://github.com/IPB
 
 # Smart Contract publishing
 
+To publish Smart Contract we need to have Polygon account. You can create your own or import test account.
+
+## Import Test Account
+
+Open Metamask and follow [account import instructions](https://metamask.zendesk.com/hc/en-us/articles/360015489331-How-to-import-an-Account). 
+Private key for test account: `f76172e35f6da2b1f7e187bdc07fbf4dcd43c28fdc4cfcb1cbdbb4b3ce3451ea`
+
+Test account address: `0x75ec25551e68E5827C40fC26382aa7e57C2A3380`
+
+This account hold some small amount of `MATIC` for fees.
+
+## Compile & Publish
+
+1. Open [Remix](https://remix.ethereum.org)
+2. Create file `Originstamp.sol` in `contracts` folder
+3. Paste content of [smart-contracts/Originstamp.sol](https://github.com/IPBee/blockchain/blob/master/smart-contracts/Originstamp.sol)
+4. Switch to `Solidity Compiler` tab on left panel
+5. Choose Compiler `0.8.7+commit.e28d00a7`
+6. Press `Compile Originstamp.sol` button
+7. Switch to `Deploy & run transactions` tab
+8. Choose environment `Injected Web3`
+9. Make sure Metamask Network is `Polygon Mainnet` and connected account correct
+10. Account address should be equal your account address, `0x75e...A3380` for test account
+11. Press `Deploy` button
+
+
 # Test Wallet
 seed phrase: `****`
 
@@ -90,6 +115,10 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 3. Use `register` method with document hash as parameter. Document hash example: `0xe4142e56e449251d27732d585248d507994e400fc19184ce6158f1263cdc9e11`
 4. Press `Write` button
 5. Approve transaction in Metamask
+6. Press `View your transaction` button and wait until transaction finish. Sometimes you need to reload browser page after some seconds
+7. Check transaction fee, should be less than $0.01
+8. Switch to Logs tab
+9. You should see `Registered` event with document hash in Topic 1
 
 ### Check on Polygonscan
 
@@ -103,7 +132,7 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 ### Check on this site
 
 1. Open site https://ipbee.github.io/blockchain
-2. Insert document hash. Document hash example: `0xe4142e56e449251d27732d585248d507994e400fc19184ce6158f1263cdc9e11`
+2. Insert document hash
 3. Compare result with Polygonscan data
 
 ## Publish a list of documents
