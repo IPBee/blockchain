@@ -59,7 +59,7 @@ Example: https://polygonscan.com/tx/0x3b18c87703bd71721e419cd62843227dfe586380ad
 
 Let's study first event in this example. Most confusing part it is `topics` array. First element in topic array is 
 `0x10906fae603eebfac53ddc0f103bee8a044dd7643c425c7a90f921dfa15ef62c` -- identifier of this particular event. It is hash 
-computed from event signature `event Registered(bytes32)`. Second topic equal to first event parameter which is `docHash`.
+computed from event signature `event Registered(bytes32 indexed)`. Second topic equal to first event parameter which is `docHash`.
 So second topic equals our document has.
 
 So to prove document has were published we need to fetch topics with `topic0` equals `0x10906fae603eebfac53ddc0f103bee8a044dd7643c425c7a90f921dfa15ef62c`
@@ -96,8 +96,12 @@ This account hold some small amount of `MATIC` for fees.
 11. Press `Deploy` button
 
 
-# Test Wallet
-seed phrase: `****`
+# Automatic testing
+
+1. Download or clone this code
+2. Switch to smart-contracts folder `cd smart-contracts`
+3. Run command `npm install`
+4. Run command `npx hardhat test`
 
 # Use-cases for testing
 
@@ -177,7 +181,7 @@ method should equal to new document hash.
 
 ## Publish/check new version of already expired doc
 
-## Try to publish already existed document
+## Try to publish already existed document as single and as list
 
 ## Try to publish from non owner account
 
