@@ -1,12 +1,13 @@
 // noinspection ES6ConvertVarToLetConst,JSDuplicatedDeclaration
 
+// TODO: connect to test polygon network
+
 import { ethers } from "hardhat";
-import { Contract, ContractFactory, Signer } from "ethers";
+import { ContractFactory, Signer } from "ethers";
 import {ContractFunction} from "@ethersproject/contracts";
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {web3} from "@openzeppelin/test-environment";
-import {toBN} from "web3-utils";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -57,7 +58,7 @@ describe("Originstamp", function () {
         accounts = await ethers.getSigners();
         ownerAddress = await accounts[0].getAddress();
         contract = await makeContract()
-    });
+    })
 
     it("Should register document", async function () {
         await contract.register(testHash1, 0)
@@ -153,6 +154,7 @@ describe("Originstamp", function () {
         const receipt = await tx.wait()
         // Registered event
         var {topics} = receipt.logs[0];
+        console.log(receipt.logs[0])
         expect(topics[0]).to.be.eq(registeredEventInterfaceHash)
         expect(topics[1]).to.be.eq(testHash2)
         expect(web3.utils.toBN(topics[2]).toNumber()).to.be.eq(newDocValidUntil)
