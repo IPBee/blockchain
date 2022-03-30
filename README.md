@@ -2,13 +2,20 @@
 
 # Height Level Solution Description
 
-We are using Smart Contract responsible for registering document hashes in Ethereum compatable blockchains. Smart Contract source code also available in [this repository](https://github.com/IPBee/blockchain/blob/master/smart-contracts/Originstamp.sol). It is written in [Solidity programming language](https://soliditylang.org) created especially for Ethereum Virtual Machine. 
+We are using Smart Contract responsible for registering document hashes in Ethereum compatible blockchains. 
+Smart Contract source code also available in [this repository](https://github.com/IPBee/blockchain/blob/master/smart-contracts/contracts/Originstamp.sol). 
+It is written in [Solidity programming language](https://soliditylang.org) created especially for Ethereum Virtual Machine. 
 
-Smart Contract has read and write methods. Write methods put and update data in blockchain. You can imagine it like global data base with free read access and paid write capability. Write commission depends on blockchain and amount of writing data. [Polygon blockchain](https://polygon.technology) for now one of the cheapest Ethereum compatible blockchain.
+Smart Contract has read and write methods. Write methods put and update data in blockchain. 
+You can imagine it like global database with free read access and paid write capability. 
+Write commission depends on blockchain and amount of writing data. [Polygon blockchain](https://polygon.technology) 
+for now one of the cheapest Ethereum compatible blockchain.
 
-To write Polygon blockchain we need to have account in Polygon network and [MATIC](https://polygon.technology/matic-token) coins to pay commission fees.
+To write Polygon blockchain we need to have account in Polygon network and [MATIC](https://polygon.technology/matic-token) 
+coins to pay commission fees.
 
-The one of the simplest way to create account is to use [Metamask wallet](https://metamask.io) available as [Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and Firefox extension.
+The one of the simplest way to create account is to use [Metamask wallet](https://metamask.io) available as 
+[Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) and Firefox extension.
 
 ### Document hash
 
@@ -18,8 +25,9 @@ You always need to use 0x... format of hashes for this Smart Contract methods. E
 
 ### Read methods
 
-* `docRegistrationTime` -- get [unix timestamp](https://www.unixtimestamp.com) of document hash registration 
+* `docRegistrationTime` -- get [unix timestamp][4] of document hash registration 
 * `newVersions` -- get new version of document hash if exists
+* `validUntil` -- get expiration time as [unix timestamp][4]
 
 You can use [Polygonscan][3] to try these methods.
 
@@ -31,7 +39,8 @@ You can use [Polygonscan][3] to try these methods.
 Emits `Registered` and `NewVersionRegistered` events.
 * `registerNewVersionMultiply` -- implement `registerNewVersion` logic for each of pair of input data 
 
-Only creator of contract can use write methods. You can use [Polygonscan][2] to try these methods. You need to click `Connect to Web3` link to connect Metamask browser 
+Only creator of contract can use write methods. You can use [Polygonscan][2] to try these methods. You need to click 
+`Connect to Web3` link to connect Metamask browser 
 extension, and you need to have `MATIC` tokens for commission fee. Usual commission about `0.0014 MATIC` ~ `$0.003` by current price.
 
 ### Events (Logs)
@@ -98,7 +107,7 @@ This account hold some small amount of `MATIC` for fees.
 
 # Automatic testing
 
-1. Download or clone this code
+1. Download or clone this repository
 2. Switch to smart-contracts folder `cd smart-contracts`
 3. Run command `npm install`
 4. Run command `npx hardhat test`
@@ -107,7 +116,8 @@ This account hold some small amount of `MATIC` for fees.
 
 ## Environment preparations
 
-Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en). We nned it only for use Smart Contract write methods
+Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en). 
+We need it only for use Smart Contract write methods
 
 
 ## Publish/check single document
@@ -116,13 +126,14 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 
 1. Open Smart Contract write methods on [Polygonscan][2]
 2. Click `Connect to Web3` to connect to Metamask wallet
-3. Use `register` method with document hash as parameter. Document hash example: `0xe4142e56e449251d27732d585248d507994e400fc19184ce6158f1263cdc9e11`
+3. Use `register` method with document hash as first parameter and valid until as [unix timestamp][4] (`0` means unlimited) as second parameter. 
+   Document hash example: `0xe4142e56e449251d27732d585248d507994e400fc19184ce6158f1263cdc9e11`
 4. Press `Write` button
 5. Approve transaction in Metamask
 6. Press `View your transaction` button and wait until transaction finish. Sometimes you need to reload browser page after some seconds
-7. Check transaction fee, should be less than $0.01
+7. Check transaction fee, should be less than `$0.01`
 8. Switch to Logs tab
-9. You should see `Registered` event with document hash in Topic 1
+9. You should see `Registered` event with document hash in Topic 1 and valid until in Topic 2
 
 ### Check on Polygonscan
 
@@ -132,6 +143,8 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 4. Convert result unix timestamp to human readable format using https://www.unixtimestamp.com
 5. Use `newVersions` method with same document hash as parameter
 6. Response should be zero: `bytes32 :  0x0000000000000000000000000000000000000000000000000000000000000000`
+7. Use `validUntil` method with same document hash as parameter
+8. Response should be equal `_validUntil` parameter used while publishing 
 
 ### Check on this site
 
@@ -145,7 +158,8 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 
 1. Open Smart Contract write methods on [Polygonscan][2]
 2. Click `Connect to Web3` to connect to Metamask wallet
-3. Use `registerMultiply` method with list of document hashes as parameter. Parameter example (two hashes): `[0x0000000000000000000000000000000000000000000000000000000000000001,0x0000000000000000000000000000000000000000000000000000000000000002]`
+3. Use `registerMultiply` method with list of document hashes and valid until times list. Parameter example (two hashes): 
+   `[0x0000000000000000000000000000000000000000000000000000000000000001,0x0000000000000000000000000000000000000000000000000000000000000002]` and `[0,0]`
 4. Press `Write` button
 5. Approve transaction in Metamask
 6. Press `View your transaction` button and wait until transaction finish. Sometimes you need to reload browser page after some seconds
@@ -157,7 +171,7 @@ Install [Metamask Chrome Extension](https://chrome.google.com/webstore/detail/me
 
 Same logic like for single document for each of document in list.
 
-## Publish/check new version of doc
+## Publish/check new version of document
 
 ### Publish
 
@@ -166,12 +180,13 @@ Same logic like for single document for each of document in list.
 3. Use `registerNewVersion` method 
 4. Fill `_newDocHash` parameter input with new document hash
 5. Fill `_expiredDocHash` parameter input with expired document hash
+5. Fill `_validUntil` parameter input with [unix timestamp][4]
 6. Press `Write` button
 7. Approve transaction in Metamask
 8. Press `View your transaction` button and wait until transaction finish. Sometimes you need to reload browser page after some seconds
 9. Switch to Logs tab
 10. You should see `Registered` and `NewVersionRegistered` events 
-11. `Registered` event should have new document hash in Topic 1
+11. `Registered` event should have new document hash in Topic 1 and valid until value in Topic 2
 12. `NewVersionRegistered` event should have new document hash in Topic 1 and old document has on Topic 2
 
 ### Check
@@ -190,3 +205,4 @@ method should equal to new document hash.
 [1]: https://polygonscan.com/address/0xb370fc5ac2846243686ff324b89c85086b453bdf#code
 [2]: https://polygonscan.com/address/0xb370fc5ac2846243686ff324b89c85086b453bdf#writeContract
 [3]: https://polygonscan.com/address/0xb370fc5ac2846243686ff324b89c85086b453bdf#readContract
+[4]: https://www.unixtimestamp.com
