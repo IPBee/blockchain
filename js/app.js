@@ -19,7 +19,7 @@ async function validate() {
     let result = await polyscanApi.fetch(docHash);
 
     if (result) {
-      const {txHash, timeStamp, newDocVersionTxHash, newDocVersionHash} = result
+      const {txHash, timeStamp, newDocVersionTxHash, newDocVersionHash, validUntilTimeStamp} = result
 
       showSuccessful()
 
@@ -29,6 +29,11 @@ async function validate() {
       let timeElement = document.getElementById("timestamp");
       let date = new Date(timeStamp * 1000);
       timeElement.innerText = date
+
+      let validUntilTimeStampElement = document.getElementById("valid_until_timestamp");
+      validUntilTimeStampElement.innerText = validUntilTimeStamp
+          ? new Date(validUntilTimeStamp * 1000).toString()
+          : 'Unlimited';
 
       const text = document.querySelector('.info__text_time')
       text.textContent = date
@@ -162,7 +167,8 @@ function PolyscanApi() {
     let result = await fetchLogs(docHash, 1)
     return result ? {
       txHash: result.transactionHash,
-      timeStamp: Number(result.timeStamp)
+      timeStamp: Number(result.timeStamp),
+      validUntilTimeStamp: Number(result.topics[2])
     } : null
   }
 
@@ -177,11 +183,10 @@ function PolyscanApi() {
     if (newVersion) {
       // new version of current document exist
       return {
-        txHash: registered.txHash,
-        timeStamp: registered.timeStamp,
+        ...registered,
         newDocVersionTxHash: newVersion.txHash,
         newDocVersionHash: newVersion.newDocVersionHash,
-        newDocVersionTimeStamp: newVersion.timeStamp
+        newDocVersionTimeStamp: newVersion.timeStamp,
       }
     } else {
       return registered

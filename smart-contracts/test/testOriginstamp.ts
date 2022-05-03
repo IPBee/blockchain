@@ -3,11 +3,12 @@
 // TODO: connect to test polygon network
 
 import { ethers } from "hardhat";
-import { ContractFactory, Signer } from "ethers";
+import {BigNumber, ContractFactory, Signer} from "ethers";
 import {ContractFunction} from "@ethersproject/contracts";
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {web3} from "@openzeppelin/test-environment";
+import {RpcTransactionReceipt} from "hardhat/internal/core/jsonrpc/types/output/receipt";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -63,6 +64,21 @@ describe("Originstamp", function () {
     it("Should register document", async function () {
         await contract.register(testHash1, 0)
         expect(Number(await contract.docRegistrationTime(testHash1))).to.greaterThan(1648494051);
+    })
+
+    it("Should register document with not too much gas", async function () {
+        const tx = await contract.register(testHash1, 0)
+        const receipt = await tx.wait() as RpcTransactionReceipt
+        expect((receipt.gasUsed as unknown as BigNumber).toNumber()).to.be.equal(48008)
+        // expect(Number(await contract.docRegistrationTime(testHash1))).to.greaterThan(1648494051);
+    })
+
+    it("Should register new version of document with not too much gas", async function () {
+        await contract.register(testHash1, 0)
+        const tx = await contract.registerNewVersion(testHash2, testHash1, 0)
+        const receipt = await tx.wait() as RpcTransactionReceipt
+        expect((receipt.gasUsed as unknown as BigNumber).toNumber()).to.be.equal(74742)
+        // expect(Number(await contract.docRegistrationTime(testHash1))).to.greaterThan(1648494051);
     })
 
     it("Should register document with limited validation time", async function () {
@@ -154,7 +170,6 @@ describe("Originstamp", function () {
         const receipt = await tx.wait()
         // Registered event
         var {topics} = receipt.logs[0];
-        console.log(receipt.logs[0])
         expect(topics[0]).to.be.eq(registeredEventInterfaceHash)
         expect(topics[1]).to.be.eq(testHash2)
         expect(web3.utils.toBN(topics[2]).toNumber()).to.be.eq(newDocValidUntil)
